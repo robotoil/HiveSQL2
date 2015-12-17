@@ -29,6 +29,7 @@ object HiveExample {
     val rdd = sqlContext.sql("select * from demo.users")
     // Output to console the retrieved records.
     rdd.collect().foreach(println)
+
     print("stopping\n")
   }
 }
