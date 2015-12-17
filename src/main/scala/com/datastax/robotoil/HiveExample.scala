@@ -20,7 +20,7 @@ object HiveExample {
     val sqlContext = new HiveContext(sc)
 
     // Map Cassandra tables(s) for Hive
-    val df1 = sqlContext.read.format("org.apache.spark.sql.cassandra")
+    sqlContext.read.format("org.apache.spark.sql.cassandra")
       .options(Map("keyspace" -> "demo", "table" -> "users"))
       .load()
       .registerTempTable("demo.users")
