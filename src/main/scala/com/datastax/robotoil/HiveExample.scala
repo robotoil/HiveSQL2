@@ -7,7 +7,7 @@ import org.apache.spark.{SparkConf, SparkContext}
 object HiveExample {
 
   def main (args: Array[String]) {
-    print("starting\n")
+    print("\nstarting\n")
 
     // Create Spark configuration.
     val conf = new SparkConf()
@@ -20,16 +20,17 @@ object HiveExample {
     val sqlContext = new HiveContext(sc)
 
     // Map Cassandra tables(s) for Hive
+    val df1 = sqlContext.read.format("org.apache.spark.sql.cassandra")
+      .options(Map("keyspace" -> "demo", "table" -> "users"))
+      .load()
+      .registerTempTable("demo.users")
 
-    // Tables for sources and roll-ups
-    val df1 = sqlContext.read.format("org.apache.spark.sql.cassandra").
-      options(Map("keyspace" -> "demo", "table" -> "users")).
-      load().registerTempTable("demo.users")
+    // Query
+    val df = sqlContext.sql("select * from demo.users")
 
-    val rdd = sqlContext.sql("select * from demo.users")
     // Output to console the retrieved records.
-    rdd.collect().foreach(println)
+    df.collect().foreach(println)
 
-    print("stopping\n")
+    print("\nstopping\n")
   }
 }
